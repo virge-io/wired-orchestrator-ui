@@ -5,6 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import { NextAdapter } from 'next-query-params';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
 import { QueryParamProvider } from 'use-query-params';
 
 import {
@@ -40,7 +41,29 @@ type AppOwnProps = { orchestratorConfig: OrchestratorConfig };
 // Add your own menu items here
 const addMenuItems = (
     defaultMenuItems: EuiSideNavItemType<object>[],
-): EuiSideNavItemType<object>[] => [...defaultMenuItems];
+): EuiSideNavItemType<object>[] => {
+    const goTo = (href: string) => (e: React.MouseEvent) => {
+        e.preventDefault();
+        Router.push(href);
+    };
+    const nmsItem = (id: string, name: string, href: string) => ({
+        id,
+        name,
+        href,
+        onClick: goTo(href),
+    });
+    return [
+        ...defaultMenuItems,
+        {
+            ...nmsItem('nms', 'NMS', '/nms'),
+            items: [
+                nmsItem('nms-switches', 'Switches', '/nms'),
+                nmsItem('nms-discovered', 'Discovered', '/nms/discovered'),
+                nmsItem('nms-jobs', 'Jobs', '/nms/jobs'),
+            ],
+        },
+    ];
+};
 
 function CustomApp({ Component, pageProps }: AppProps & AppOwnProps) {
     const { orchestratorConfig } = pageProps;
