@@ -4,10 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import {
-    EuiBasicTable,
-    EuiBasicTableColumn,
     EuiButton,
-    EuiDescriptionList,
     EuiFlexGrid,
     EuiFlexItem,
     EuiHealth,
@@ -23,8 +20,11 @@ import {
     NmsCorelink,
     NmsError,
     NmsInterface,
+    NmsKeyValueList,
     NmsLiveData,
     NmsSwitchDetail,
+    NmsTable,
+    NmsTableColumn,
     useNmsFetch,
     useNmsQuery,
 } from '@/components/Nms';
@@ -52,11 +52,7 @@ const InfoPanel = ({
             </EuiTitle>
             <EuiSpacer size="s" />
             {record ? (
-                <EuiDescriptionList
-                    compressed
-                    type="column"
-                    listItems={toListItems(record)}
-                />
+                <NmsKeyValueList listItems={toListItems(record)} />
             ) : (
                 <EuiText size="s">Not present</EuiText>
             )}
@@ -64,7 +60,7 @@ const InfoPanel = ({
     </EuiFlexItem>
 );
 
-const corelinkColumns: EuiBasicTableColumn<NmsCorelink>[] = [
+const corelinkColumns: NmsTableColumn<NmsCorelink>[] = [
     {
         field: 'description',
         name: 'Corelink',
@@ -79,7 +75,7 @@ const corelinkColumns: EuiBasicTableColumn<NmsCorelink>[] = [
     { field: 'members', name: 'Members' },
 ];
 
-const interfaceColumns: EuiBasicTableColumn<NmsInterface>[] = [
+const interfaceColumns: NmsTableColumn<NmsInterface>[] = [
     { field: 'name', name: 'Interface' },
     {
         field: 'up',
@@ -145,7 +141,7 @@ export const NmsSwitchDetailPage = () => {
                     <EuiTitle size="s">
                         <h3>Corelinks</h3>
                     </EuiTitle>
-                    <EuiBasicTable
+                    <NmsTable
                         items={data.corelinks}
                         columns={corelinkColumns}
                         noItemsMessage="No corelinks"
@@ -169,7 +165,7 @@ export const NmsSwitchDetailPage = () => {
             {live && (
                 <>
                     <EuiSpacer />
-                    <EuiBasicTable
+                    <NmsTable
                         items={live.interfaces}
                         columns={interfaceColumns}
                         tableLayout="auto"

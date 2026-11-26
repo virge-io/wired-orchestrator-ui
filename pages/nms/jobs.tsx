@@ -1,14 +1,14 @@
 import React from 'react';
 
-import {
-    EuiBadge,
-    EuiBasicTable,
-    EuiBasicTableColumn,
-    EuiPageHeader,
-    EuiSpacer,
-} from '@elastic/eui';
+import { EuiBadge, EuiPageHeader, EuiSpacer } from '@elastic/eui';
 
-import { NmsError, NmsJob, useNmsQuery } from '@/components/Nms';
+import {
+    NmsError,
+    NmsJob,
+    NmsTable,
+    NmsTableColumn,
+    useNmsQuery,
+} from '@/components/Nms';
 
 const STATUS_COLORS: Record<string, string> = {
     FINISHED: 'success',
@@ -21,7 +21,7 @@ const STATUS_COLORS: Record<string, string> = {
 const formatTime = (time: string | null) =>
     time ? new Date(time).toLocaleString() : '-';
 
-const columns: EuiBasicTableColumn<NmsJob>[] = [
+const columns: NmsTableColumn<NmsJob>[] = [
     { field: 'id', name: 'ID' },
     { field: 'function_name', name: 'Function' },
     {
@@ -53,7 +53,7 @@ export const NmsJobsPage = () => {
             />
             <EuiSpacer />
             <NmsError error={error} />
-            <EuiBasicTable
+            <NmsTable
                 items={data ?? []}
                 columns={columns}
                 loading={isLoading}

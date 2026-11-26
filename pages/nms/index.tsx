@@ -2,23 +2,20 @@ import React from 'react';
 
 import Link from 'next/link';
 
-import {
-    EuiBasicTable,
-    EuiBasicTableColumn,
-    EuiPageHeader,
-    EuiSpacer,
-} from '@elastic/eui';
+import { EuiPageHeader, EuiSpacer } from '@elastic/eui';
 
 import {
     CnaasStateBadge,
     NetboxStatusBadge,
     NmsError,
     NmsSwitch,
+    NmsTable,
+    NmsTableColumn,
     SyncBadge,
     useNmsQuery,
 } from '@/components/Nms';
 
-const columns: EuiBasicTableColumn<NmsSwitch>[] = [
+const columns: NmsTableColumn<NmsSwitch>[] = [
     {
         field: 'hostname',
         name: 'Hostname',
@@ -65,7 +62,7 @@ export const NmsSwitchesPage = () => {
             <EuiPageHeader pageTitle="Switches" />
             <EuiSpacer />
             <NmsError error={error} />
-            <EuiBasicTable
+            <NmsTable
                 items={data ?? []}
                 columns={columns}
                 loading={isLoading}

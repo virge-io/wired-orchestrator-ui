@@ -2,13 +2,7 @@ import React, { useState } from 'react';
 
 import Link from 'next/link';
 
-import {
-    EuiBasicTable,
-    EuiBasicTableColumn,
-    EuiButton,
-    EuiPageHeader,
-    EuiSpacer,
-} from '@elastic/eui';
+import { EuiButton, EuiPageHeader, EuiSpacer } from '@elastic/eui';
 import {
     ToastTypes,
     useShowToastMessage,
@@ -18,6 +12,8 @@ import {
     CnaasStateBadge,
     NmsDiscovered,
     NmsError,
+    NmsTable,
+    NmsTableColumn,
     useNmsFetch,
     useNmsQuery,
 } from '@/components/Nms';
@@ -49,7 +45,7 @@ export const NmsDiscoveredPage = () => {
             .finally(() => setStarting(undefined));
     };
 
-    const columns: EuiBasicTableColumn<NmsDiscovered>[] = [
+    const columns: NmsTableColumn<NmsDiscovered>[] = [
         { field: 'hostname', name: 'Hostname' },
         { field: 'ztp_mac', name: 'ZTP MAC' },
         { field: 'dhcp_ip', name: 'DHCP IP' },
@@ -91,7 +87,7 @@ export const NmsDiscoveredPage = () => {
             <EuiPageHeader pageTitle="Discovered devices" />
             <EuiSpacer />
             <NmsError error={error} />
-            <EuiBasicTable
+            <NmsTable
                 items={data ?? []}
                 columns={columns}
                 loading={isLoading}
