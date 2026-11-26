@@ -5,7 +5,7 @@ import { SessionProvider } from 'next-auth/react';
 import { NextAdapter } from 'next-query-params';
 import App, { AppContext, AppProps } from 'next/app';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { QueryParamProvider } from 'use-query-params';
 
 import {
@@ -24,7 +24,6 @@ import {
     WfoErrorMonitoring,
     WfoErrorMonitoringProvider,
     WfoLogoSpinner,
-    WfoMenuItemLink,
     WfoPageTemplate,
     WfoToastsList,
     emptyOrchestratorConfig,
@@ -39,8 +38,34 @@ import '../font/inter.css';
 
 type AppOwnProps = { orchestratorConfig: OrchestratorConfig };
 
+// Add your own menu items here
+const addMenuItems = (
+    defaultMenuItems: EuiSideNavItemType<object>[],
+): EuiSideNavItemType<object>[] => {
+    const goTo = (href: string) => (e: React.MouseEvent) => {
+        e.preventDefault();
+        Router.push(href);
+    };
+    const nmsItem = (id: string, name: string, href: string) => ({
+        id,
+        name,
+        href,
+        onClick: goTo(href),
+    });
+    return [
+        ...defaultMenuItems,
+        {
+            ...nmsItem('nms', 'NMS', '/nms'),
+            items: [
+                nmsItem('nms-switches', 'Switches', '/nms'),
+                nmsItem('nms-discovered', 'Discovered', '/nms/discovered'),
+                nmsItem('nms-jobs', 'Jobs', '/nms/jobs'),
+            ],
+        },
+    ];
+};
+
 function CustomApp({ Component, pageProps }: AppProps & AppOwnProps) {
-    const router = useRouter();
     const { orchestratorConfig } = pageProps;
     const [orchestratorLoadedConfig, setOrchestratorLoadedConfig] =
         useState<OrchestratorConfig | null>(null);
@@ -56,25 +81,6 @@ function CustomApp({ Component, pageProps }: AppProps & AppOwnProps) {
             setOrchestratorLoadedConfig(orchestratorConfig);
         }
     }, [orchestratorConfig]);
-
-    const addMenuItems = (
-        defaultMenuItems: EuiSideNavItemType<object>[],
-    ): EuiSideNavItemType<object>[] => [
-        ...defaultMenuItems,
-        {
-            name: 'Search',
-            id: '20',
-            isSelected: router.pathname === '/search',
-            href: '/search',
-            renderItem: () => (
-                <WfoMenuItemLink
-                    path={'/search'}
-                    translationString="Search"
-                    isSelected={router.pathname === '/search'}
-                />
-            ),
-        },
-    ];
 
     const errorMonitoringHandler: WfoErrorMonitoring | undefined = {
         reportError: (error) => console.error(error),
@@ -115,11 +121,11 @@ function CustomApp({ Component, pageProps }: AppProps & AppOwnProps) {
                                             <ConfirmationDialogContextWrapper>
                                                 <WfoPageTemplate
                                                     getAppLogo={getAppLogo}
+                                                    colorMode={colorMode}
+                                                    setColorMode={setColorMode}
                                                     overrideMenuItems={
                                                         addMenuItems
                                                     }
-                                                    colorMode={colorMode}
-                                                    setColorMode={setColorMode}
                                                 >
                                                     <QueryParamProvider
                                                         adapter={NextAdapter}
